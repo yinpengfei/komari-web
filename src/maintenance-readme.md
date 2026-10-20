@@ -10,7 +10,7 @@ Original MIT license and copyright notices are retained.
 - [Frontend](https://github.com/yinpengfei/komari-web/tree/maint/1.5.1), based on the upstream server release's `1.5.0-fix1` frontend.
 - [Agent](https://github.com/yinpengfei/komari-agent/tree/maint/1.5.1)
 - [Server releases](https://github.com/yinpengfei/komari/releases)
-- [Privacy review](PRIVACY_REVIEW.md)
+- [Privacy review](https://github.com/yinpengfei/komari/blob/maint/1.5.1/PRIVACY_REVIEW.md)
 
 ## Installation / 安装
 
