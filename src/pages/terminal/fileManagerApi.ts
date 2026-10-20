@@ -497,63 +497,7 @@ export const fileDownloadUrl = (uuid: string, path: string, inline = false) => {
   return `/api/admin/client/${encodeURIComponent(uuid)}/file/download?${params.toString()}`;
 };
 
-const LOCAL_HOSTNAMES = new Set(["localhost", "127.0.0.1", "[::1]", "::1"]);
-
-// Office Online fetches the source from its own servers. During local Vite
-// development, localhost is not reachable there, so prefer the configured
-// proxy target when it provides a usable external origin.
-const officePreviewSourceOrigin = () => {
-  const browserOrigin = window.location.origin;
-  if (!LOCAL_HOSTNAMES.has(window.location.hostname) || !import.meta.env.VITE_API_TARGET) {
-    return browserOrigin;
-  }
-  try {
-    const configuredOrigin = new URL(import.meta.env.VITE_API_TARGET, browserOrigin);
-    if (
-      (configuredOrigin.protocol === "http:" || configuredOrigin.protocol === "https:") &&
-      !LOCAL_HOSTNAMES.has(configuredOrigin.hostname)
-    ) {
-      return configuredOrigin.origin;
-    }
-  } catch {
-    // Keep the browser origin when the development proxy target is invalid.
-  }
-  return browserOrigin;
-};
-
-export const fetchOfficePreviewUrl = async (uuid: string, path: string) => {
-  const tokenParams = new URLSearchParams({ path });
-  const tokenResponse = await fetch(
-    `/api/admin/client/${encodeURIComponent(uuid)}/file/preview-token?${tokenParams.toString()}`,
-    { credentials: "include" },
-  );
-  const tokenPayload = await tokenResponse.json().catch(() => null) as
-    | { message?: string; data?: { token?: string } }
-    | null;
-  if (!tokenResponse.ok || !tokenPayload?.data?.token) {
-    throw new Error(tokenPayload?.message || "Failed to create preview token");
-  }
-  // Keep the externally fetched URL opaque. Office Online has to decode the
-  // `src` parameter before requesting it, so embedding a percent-encoded file
-  // path here makes non-ASCII paths prone to double-decoding issues. The
-  // preview token already binds the client and path on the server.
-  const extension = remoteBasename(path).match(/\.([A-Za-z0-9]+)$/)?.[1]?.toLowerCase() || "bin";
-  const downloadParams = new URLSearchParams({
-    inline: "1",
-    preview_token: tokenPayload.data.token,
-    // Keep an ASCII filename (and its extension) in the URL as well as in
-    // the response headers. Office Online uses it as a fallback when the
-    // original filename contains non-ASCII characters.
-    filename: `komari-preview.${extension}`,
-  });
-  const cachedChunkSize = getCachedTransferChunkSize(uuid, "download");
-  if (cachedChunkSize) {
-    downloadParams.set("chunk_size", String(cachedChunkSize));
-  }
-  // Office Online fetches the source from its own servers. During local Vite
-  // development, localhost is not reachable there, so prefer the configured
-  // proxy target when it provides a usable external origin.
-  const sourceOrigin = officePreviewSourceOrigin();
-  const source = `${sourceOrigin}/api/preview/client/${encodeURIComponent(uuid)}/file/download?${downloadParams.toString()}`;
-  return `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(source)}`;
+// Never mint a preview token or share private file URLs with external viewers.
+export const fetchOfficePreviewUrl = async (_uuid: string, _path: string): Promise<string> => {
+  throw new Error("Office 在线预览已关闭，以避免文件内容发送给第三方。请下载后在本地打开。 / Online Office preview is disabled for privacy. Download and open locally.");
 };

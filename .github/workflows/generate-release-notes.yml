@@ -25,7 +25,7 @@ jobs:
             const clean = (value) => (typeof value === "string" ? value.trim() : "");
             const releaseTimestamp = (release) => Date.parse(release.published_at || release.created_at || "");
 
-            const tag = clean(context.payload.release?.tag_name) || clean(core.getInput("tag"));
+            const tag = clean(context.payload.release?.tag_name) || clean(context.payload.inputs?.tag);
             if (!tag) {
               core.setFailed("No release tag was provided.");
               return;

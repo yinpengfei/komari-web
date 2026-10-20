@@ -18,7 +18,7 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY || process.env.OPENAI_API_TOKE
 const OPENAI_BASE_URL = process.env.OPENAI_BASE_URL || process.env.OPENAI_API_BASE || process.env.OPENAI_ENDPOINT || '';
 const OPENAI_MODEL = process.env.OPENAI_MODEL || 'gpt-4o-mini';
 const DRY_RUN = process.argv.includes('--dry-run');
-const FILL_AI = !process.argv.includes('--no-ai');
+const FILL_AI = process.argv.includes('--ai') && !process.argv.includes('--no-ai');
 
 function getArg(name, def = undefined) {
   // supports --name=value

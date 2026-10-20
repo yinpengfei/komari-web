@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import maintenanceReadme from "@/maintenance-readme.md?raw";
+import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import "github-markdown-css/github-markdown.css";
@@ -11,16 +12,9 @@ import { getEula } from "@/utils/eula";
 import { SettingCardCollapse } from "@/components/admin/SettingCard";
 
 export default function AboutPage() {
-  const [markdown, setMarkdown] = useState("");
+  const markdown = maintenanceReadme;
   const { t, i18n } = useTranslation();
   const [view, setView] = useState("open_source");
-  useEffect(() => {
-    fetch(
-      "https://raw.githubusercontent.com/komari-monitor/komari/refs/heads/main/README.md"
-    )
-      .then((res) => res.text())
-      .then(setMarkdown);
-  }, []);
 
   const open_source_licenses = {
     "Apache-2.0 License": [
@@ -111,7 +105,7 @@ export default function AboutPage() {
     "ISC License": ["github.com/oschwald/maxminddb-golang", "lucide-react"],
     "CC-BY-4.0 License": [
       "License: https://creativecommons.org/licenses/by/4.0/",
-      "twemoji | Twemoji © Twitter, Inc. and other contributors | Not modified | https://github.com/twitter/twemoji",
+      "twemoji | Twemoji 漏 Twitter, Inc. and other contributors | Not modified | https://github.com/twitter/twemoji",
     ],
   };
 
@@ -192,7 +186,7 @@ export default function AboutPage() {
                   )}
                 </div>
                 <a
-                  href="https://github.com/komari-monitor/komari/blob/main/README.md"
+                  href="https://github.com/yinpengfei/komari/blob/maint/1.5.1/README.md"
                   target="_blank"
                   rel="noreferrer"
                   className="flex flex-row gap-2 text-sm items-center"

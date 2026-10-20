@@ -1,8 +1,6 @@
 name: i18n sync
 
 on:
-  push:
-    branches: ["**"]
   workflow_dispatch: {}
 
 jobs:
@@ -34,16 +32,8 @@ jobs:
           npm ci --no-audit --no-fund || npm i --no-audit --no-fund
 
       - name: Run i18n sync
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }}
-          OPENAI_MODEL: ${{ vars.OPENAI_MODEL }}
-          #I18N_LOCALES_DIR: ${{ vars.I18N_LOCALES_DIR }}
-          #I18N_SOURCE: ${{ vars.I18N_SOURCE }}
-          #I18N_AI_BATCH_SIZE: ${{ vars.I18N_AI_BATCH_SIZE }}
-          #I18N_AI_MAX_INPUT_CHARS: ${{ vars.I18N_AI_MAX_INPUT_CHARS }}
         run: |
-          node script/i18n-sync.mjs
+          node script/i18n-sync.mjs --no-ai
 
       - name: Check for changes
         id: diff

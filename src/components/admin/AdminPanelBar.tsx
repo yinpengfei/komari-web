@@ -110,6 +110,8 @@ const AdminPanelBar = ({ content }: AdminPanelBarProps) => {
       try {
         const resp = await fetch(`/themes/${currentTheme}/komari-theme.json`, {
           cache: "no-cache",
+            credentials: "omit",
+            referrerPolicy: "no-referrer",
         });
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
         const data = await resp.json();
@@ -260,12 +262,14 @@ const AdminPanelBar = ({ content }: AdminPanelBarProps) => {
     async function loadReleases() {
       try {
         const resp = await fetch(
-          "https://api.github.com/repos/komari-monitor/komari/releases?per_page=100",
+          "https://api.github.com/repos/yinpengfei/komari/releases?per_page=100",
           {
             headers: {
               Accept: "application/vnd.github+json",
             },
             cache: "no-cache",
+            credentials: "omit",
+            referrerPolicy: "no-referrer",
           },
         );
         if (!resp.ok) throw new Error(`GitHub HTTP ${resp.status}`);
